@@ -1,0 +1,25 @@
+{
+  "name": "spiritstonegenerator",
+  "version": "0.0.1",
+  "description": "Getting all the spirit stones.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore . --cache",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lobabob/SpiritStoneGenerator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lobabob/SpiritStoneGenerator/issues"
+  },
+  "homepage": "https://github.com/lobabob/SpiritStoneGenerator#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.10.0"
+  }
+}
