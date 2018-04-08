@@ -1,0 +1,16 @@
+env:
+  es6: true
+  node: true
+extends: airbnb-base
+parserOptions:
+  sourceType: script
+rules:
+  linebreak-style: [error, unix]
+  max-len: [error, { code: 120, tabWidth: 2 }]
+  # Safeguard from accidental use of = instead of === within conditions
+  no-cond-assign: [error, except-parens]
+  # No console uses whatsoever, winston logger should be used instead
+  no-console: error
+  no-param-reassign: [error, { props: false }]
+  no-unused-vars: [warn, { args: none }]
+  strict: [error, global]
