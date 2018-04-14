@@ -4,23 +4,27 @@ services:
   mon:
     build:
       context: .
-      # target: live-code
+      target: base 
     tty: true
     stdin_open: true
     command: npm run mon
     volumes:
       - ./:/usr/src/app
-  # debug:
-  #   build: .
-  #   tty: true
-  #   stdin_open: true
-  #   command: npm run debug
-  #   volumes:
-  #     - ./:/usr/src/app
-  # test:
-  #   build: .
-  #   command: npm test
-  #   volumes:
-  #     - ./:/usr/src/app
+  debug:
+    build:
+      context: .
+      target: base 
+    tty: true
+    stdin_open: true
+    command: npm run debug
+    volumes:
+      - ./:/usr/src/app
+  test:
+    build:
+      context: .
+      target: base 
+    command: npm test
+    volumes:
+      - ./:/usr/src/app
   # db:
   #   image: mysql:latest

@@ -7,6 +7,7 @@ README.md
 node_modules
 .npm
 .eslintcache
+.eslintrc.yml
 logs
 *.log
 npm-debug.log*
