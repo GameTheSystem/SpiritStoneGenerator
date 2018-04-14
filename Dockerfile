@@ -14,7 +14,7 @@ RUN npm install && npm cache clean --force
 ENV PATH ${PATH}:/usr/src/node_modules/.bin
 WORKDIR /usr/src/app
 
-# ------ Set up the base for all build stages ------ #
+# ------ The release stage ------ #
 FROM base AS release
 
 COPY . .
