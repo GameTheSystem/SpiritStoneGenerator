@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  mon:
+    build:
+      context: .
+      # target: live-code
+    tty: true
+    stdin_open: true
+    command: npm run mon
+    volumes:
+      - ./:/usr/src/app
+  # debug:
+  #   build: .
+  #   tty: true
+  #   stdin_open: true
+  #   command: npm run debug
+  #   volumes:
+  #     - ./:/usr/src/app
+  # test:
+  #   build: .
+  #   command: npm test
+  #   volumes:
+  #     - ./:/usr/src/app
+  # db:
+  #   image: mysql:latest
