@@ -11,11 +11,15 @@ WORKDIR /usr/src
 COPY package.json .
 COPY package-lock.json .
 RUN npm install && npm cache clean --force
+
+# Set workdir and dependencies as global for mounted volumes.
 ENV PATH ${PATH}:/usr/src/node_modules/.bin
 WORKDIR /usr/src/app
 
 # ------ The release stage ------ #
-FROM base AS release
+FROM node:8.11-alpine AS release
+COPY --from=base /usr/src /usr/src
 
+WORKDIR /usr/src/app
 COPY . .
 CMD [ "npm", "start" ]
