@@ -4,7 +4,10 @@
   "description": "Getting all the spirit stones.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --ignore-path .gitignore . --cache",
+    "start": "node index.js",
+    "mon": "nodemon",
+    "debug": "nodemon --inspect-brk=0.0.0.0:9229 --nolazy",
+    "lint": "eslint --cache .",
     "test": "npm run lint"
   },
   "repository": {
@@ -20,6 +23,7 @@
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.10.0"
+    "eslint-plugin-import": "^2.10.0",
+    "nodemon": "^1.17.3"
   }
 }

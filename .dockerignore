@@ -1,0 +1,14 @@
+Dockerfile
+docker-compose.yml
+.gitignore
+.git
+.travis.yml
+README.md
+node_modules
+.npm
+.eslintcache
+.eslintrc.yml
+logs
+*.log
+npm-debug.log*
+.vscode
