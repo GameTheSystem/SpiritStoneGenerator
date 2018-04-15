@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "mon": "nodemon",
-    "debug": "nodemon --inspect --no-lazy",
+    "debug": "nodemon --inspect-brk=0.0.0.0:9229 --no-lazy",
     "lint": "eslint --cache .",
     "test": "npm run lint"
   },
