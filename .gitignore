@@ -58,3 +58,5 @@ typings/
 .env
 
 .vscode
+debug/
+integrations/scripts/cookies
