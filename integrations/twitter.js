@@ -10,9 +10,14 @@ function createAccount() {
   return new Promise(function(resolve, reject) {
 
     execFile(`${cwd}/scripts/runners/createAccount.sh`, (err, stdout, stderr) => {
-      let result = JSON.parse(stdout);
+      let result;
+      try {
+        result = JSON.parse(stdout);
+      } catch(e) {
+        reject({error: e.toString()});
+      }
 
-      if (result.error) {
+      if (result === undefined || result.error) {
         reject(result);
       } else {
         fs.renameSync(`${cwd}/scripts/cookies/createAccount.txt`, `${cwd}/scripts/cookies/${result.email}${result.password}.txt`);
