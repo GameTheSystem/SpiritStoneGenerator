@@ -9,8 +9,7 @@ services:
     depends_on:
       - db
     environment:
-      - DB_TYPE=mysql
-      - DB=db:3306/ssg
+      - DB_URL=mysql://db:3306/ssg
       - DB_USER=root
       - DB_PASS=root
     volumes:
@@ -23,8 +22,7 @@ services:
     depends_on:
       - db
     environment:
-      - DB_TYPE=mysql
-      - DB=db:3306/ssg
+      - DB_URL=mysql://db:3306/ssg
       - DB_USER=root
       - DB_PASS=root
     ports:
@@ -37,8 +35,7 @@ services:
     depends_on:
       - db
     environment:
-      - DB_TYPE=mysql
-      - DB=db:3306/ssg_test
+      - DB_URL=mysql://db:3306/ssg_test
       - DB_USER=root
       - DB_PASS=root
     volumes:
