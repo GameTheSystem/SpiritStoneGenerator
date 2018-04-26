@@ -31,5 +31,8 @@
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
     "sequelize": "^4.37.6"
+  },
+  "optionalDependencies": {
+    "mysql2": "^1.5.3"
   }
 }
