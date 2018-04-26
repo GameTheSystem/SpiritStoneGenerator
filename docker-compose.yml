@@ -6,6 +6,13 @@ services:
     tty: true
     stdin_open: true
     command: npm run mon -- -L
+    depends_on:
+      - db
+    environment:
+      - DB_TYPE=mysql
+      - DB=db:3306/ssg
+      - DB_USER=root
+      - DB_PASS=root
     volumes:
       - ./:/usr/src/app
   debug:
@@ -13,6 +20,13 @@ services:
     tty: true
     stdin_open: true
     command: npm run debug -- -L
+    depends_on:
+      - db
+    environment:
+      - DB_TYPE=mysql
+      - DB=db:3306/ssg
+      - DB_USER=root
+      - DB_PASS=root
     ports:
       - 9229:9229
     volumes:
@@ -20,7 +34,16 @@ services:
   test:
     build: .
     command: npm test
+    depends_on:
+      - db
+    environment:
+      - DB_TYPE=mysql
+      - DB=db:3306/ssg_test
+      - DB_USER=root
+      - DB_PASS=root
     volumes:
       - ./:/usr/src/app
-  # db:
-  #   image: mysql:latest
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
