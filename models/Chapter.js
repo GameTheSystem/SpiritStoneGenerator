@@ -1,17 +1,15 @@
 'use strict';
 
-const Sequelize = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  const Chapter = sequelize.define('Chapter', {
+    novel: DataTypes.STRING,
+    chapter: DataTypes.INTEGER,
+    url: DataTypes.STRING,
+  });
 
-const Chapter = Sequelize.define('Chapter', {
-  /**
-   * Should fields that cover the following info:
-   *
-   * Novel Title,
-   * chapter,
-   * accountId used to unlock this chapter most recently,
-   * pastebin link,
-   * pastebin expiration time if that's still a concern we have
-   */
-});
+  Chapter.associate = (models) => {
+    models.Chapter.belongsTo(models.Account);
+  };
 
-module.exports = Chapter;
+  return Chapter;
+};
