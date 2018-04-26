@@ -1,5 +1,8 @@
 version: '3.4'
 
+volumes:
+  empty_dir:
+
 services:
   mon:
     build: .
@@ -14,6 +17,7 @@ services:
       - DB_PASS=root
     volumes:
       - ./:/usr/src/app
+      - empty_dir:/usr/src/app/node_modules
   debug:
     build: .
     tty: true
@@ -29,6 +33,7 @@ services:
       - 9229:9229
     volumes:
       - ./:/usr/src/app
+      - empty_dir:/usr/src/app/node_modules
   test:
     build: .
     command: npm test
@@ -40,6 +45,7 @@ services:
       - DB_PASS=root
     volumes:
       - ./:/usr/src/app
+      - empty_dir:/usr/src/app/node_modules
   db:
     image: mysql:latest
     environment:
