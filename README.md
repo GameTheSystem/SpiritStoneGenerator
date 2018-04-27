@@ -16,7 +16,7 @@ the code yourself.
 This will download and run the Docker image for the Spirit Stone Generator.
 ```bash
 docker pull gamethesystem/spiritstonegenerator
-docker run -e DB=mysql://address:port/db_name -e DB_USER=blah -e DB_PASS=blah -d gamethesystem/spiritstonegenerator
+docker run -e DB_URL=mysql://address:port/db_name -e DB_USER=blah -e DB_PASS=blah -d gamethesystem/spiritstonegenerator
 ```
 
 **Note:** You may have to add network options to the `docker run` command so that the container can see the database 
