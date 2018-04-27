@@ -5,24 +5,21 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const config = require('../config');
 
-const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, config.db);
-// TODO Need to load in all model files in this folder and export them
-// const basename = path.basename(__filename);
-// const db = {};
+const sequelize = new Sequelize(config.db.url, config.db);
+const thisFile = path.basename(__filename);
+const models = {};
 
-// fs.readdirSync(__dirname)
-//   .filter(file => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
-//   .forEach((file) => {
-//     const model = sequelize.import(path.join(__dirname, file));
-//     db[model.name] = model;
-//   })
+fs.readdirSync(__dirname)
+  .filter(fileName => fileName !== thisFile && fileName.indexOf('.') !== 0 && fileName.slice(-3) === '.js')
+  .forEach((fileName) => {
+    const model = sequelize.import(path.join(__dirname, fileName));
+    models[model.name] = model;
+  });
 
-// Object.keys(db).forEach((modelName) => {
-//   if (db[modelName].associate) {
-//     db[modelName].associate(db);
-//   }
-// });
+Object.keys(models).forEach((model) => {
+  if (models[model].associate) {
+    models[model].associate(models);
+  }
+});
 
-// db.sequelize = sequelize;
-
-// module.exports = db;
+module.exports = Object.assign(models, { sequelize });

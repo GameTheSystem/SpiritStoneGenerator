@@ -1,17 +1,17 @@
 'use strict';
 
-const Sequelize = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  const Account = sequelize.define('Account', {
+    username: DataTypes.STRING,
+    password: DataTypes.STRING,
+    email: DataTypes.STRING,
+    spiritStones: DataTypes.INTEGER,
+    banned: { type: DataTypes.BOOLEAN, defaultValue: false },
+  });
 
-const Account = Sequelize.define('Account', {
-  /**
-   * Should fields that cover the following info:
-   *
-   * some internal id field used to reference this account
-   * username,
-   * password,
-   * email address,
-   * spirit stones
-   */
-});
+  Account.associate = (models) => {
+    models.Account.hasMany(models.Chapter);
+  };
 
-module.exports = Account;
+  return Account;
+};
