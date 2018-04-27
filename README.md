@@ -20,7 +20,7 @@ docker run -e DB_URL=mysql://address:port/db_name -e DB_USER=blah -e DB_PASS=bla
 ```
 
 **Note:** You may have to add network options to the `docker run` command so that the container can see the database 
-correctly
+correctly.
 
 ### Run Natively
 
@@ -31,7 +31,7 @@ relevant env vars.
 git clone https://github.com/GameTheSystem/SpiritStoneGenerator.git
 cd SpiritStoneGenerator
 npm i
-DB_URL=mysql://address:port/db_name DB_USER=blah DB_PASS=blah npm s
+DB_URL=mysql://address:port/db_name DB_USER=blah DB_PASS=blah npm start
 ```
 
 ## How To Interface
