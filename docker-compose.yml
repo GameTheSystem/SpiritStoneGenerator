@@ -1,26 +1,52 @@
 version: '3.4'
 
+volumes:
+  empty_dir:
+
 services:
   mon:
     build: .
     tty: true
     stdin_open: true
     command: npm run mon -- -L
+    depends_on:
+      - db
+    environment:
+      - DB_URL=mysql://db:3306/ssg
+      - DB_USER=root
+      - DB_PASS=root
     volumes:
       - ./:/usr/src/app
+      - empty_dir:/usr/src/app/node_modules
   debug:
     build: .
     tty: true
     stdin_open: true
     command: npm run debug -- -L
+    depends_on:
+      - db
+    environment:
+      - DB_URL=mysql://db:3306/ssg
+      - DB_USER=root
+      - DB_PASS=root
     ports:
       - 9229:9229
     volumes:
       - ./:/usr/src/app
+      - empty_dir:/usr/src/app/node_modules
   test:
     build: .
     command: npm test
+    depends_on:
+      - db
+    environment:
+      - DB_URL=mysql://db:3306/ssg_test
+      - DB_USER=root
+      - DB_PASS=root
     volumes:
       - ./:/usr/src/app
-  # db:
-  #   image: mysql:latest
+      - empty_dir:/usr/src/app/node_modules
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
