@@ -9,6 +9,7 @@ rules:
   max-len: [error, { code: 120, tabWidth: 2 }]
   # Safeguard from accidental use of = instead of === within conditions
   no-cond-assign: [error, except-parens]
+  no-multi-spaces: off
   no-param-reassign: [error, { props: false }]
   no-unused-vars: [warn, { args: none }]
   strict: [error, global]
