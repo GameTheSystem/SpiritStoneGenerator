@@ -1,9 +1,14 @@
 'use strict';
 
+/**
+ * PrivateBin Encryption Docs: https://github.com/PrivateBin/PrivateBin/wiki/Encryption-format
+ * PrivateBin API Docs: https://github.com/PrivateBin/PrivateBin/wiki/API
+ */
+
 const querystring = require('querystring');
 const zlib = require('zlib');
 const crypto = require('crypto');
-const { privatebin } = require('../config');
+const config = require('../config');
 const request = require('request-promise-native').defaults({
   json: true,
   headers: {
@@ -18,7 +23,7 @@ const encOpts = {
   cipher: 'aes',
   mode: 'gcm',
   adata: '',      // optional cleartext auth data, not currently used
-  iter: 2000,     // Key Iterations
+  iter: 10000,    // Key Iterations
   ks: 256,        // key size in bits
 };
 Object.freeze(encOpts);
@@ -39,7 +44,7 @@ function genUrl(host, pasteId, key) {
  */
 function prepMsg(msg) {
   return new Promise((resolve, reject) => {
-    zlib.deflateRaw(msg, (err, data) => {
+    zlib.deflateRaw(Buffer.from(msg, 'utf16le').toString('utf8'), (err, data) => {
       if (err) return reject(err);
       return resolve(data.toString('base64'));
     });
@@ -68,7 +73,7 @@ function genKey(passphrase, salt, iterations, keySize, digest) {
 /**
  * Encrypts any message according to the provided key and password in the format PrivateBin expects.
  * @param {String} msg The payload being sent to privatebin in plain text.
- * @param {String} masterKey A randomly generated key. This is used by PasteBin clients to decrypt the generated paste.
+ * @param {String} masterKey A randomly generated base64 key. Used by PasteBin clients to decrypt pastes.
  * @param {String} pass An optional password. Used by PasteBin clients in conjunction with the masterKey for decryption.
  */
 function encrypt(msg, masterKey, pass) {
@@ -91,37 +96,48 @@ function encrypt(msg, masterKey, pass) {
 }
 
 /**
- * Will upload a chapter to a privatebin instance. Will use https://privatebin.net by default.
- * @param {String} novel The name of the novel this chapter is for.
- * @param {String} title The title of this chapter.
- * @param {String} chapter The actual chapter to create a paste for.
- * @param {Object} options Any additional pastebin relevant options
+ * Creates a paste on a PrivateBin instance.
+ * @param {String} data The data to paste to PrivateBin
+ * @param {Object} options Any options relevant to creating a PrivateBin Paste. Check the API docs at the top of the
+ * file to see more info.
  */
-function uploadChapter(novel, title, chapter, { host = 'https://privatebin.net', password = privatebin.password, } = {}) {
-  const randomKey = crypto.randomBytes(8).toString('base64');
-  const data = `${novel} - ${title}\n${chapter}`;
+function createPaste(data, options = {}) {
+  const randomKey = crypto.randomBytes(32).toString('base64');
+  options = Object.assign({}, config.privatebin, options);      // eslint-disable-line no-param-reassign
 
-  return encrypt(data, randomKey, password)
+  return encrypt(data, randomKey, options.password)
     .then((payload) => {
       const body = querystring.stringify({
         data: JSON.stringify(payload),
-        expire: 'never',
-        formatter: 'plaintext',
-        burnafterreading: 0,
-        opendiscussion: 0,
+        expire: options.expire,
+        formatter: options.formatter,
+        burnafterreading: options.burnafterreading,
+        opendiscussion: options.opendiscussion,
       });
 
-      return request.post(host, { body })
-        .then((res = {}) => {
-          // res.key = randomKey;
+      return request.post(options.host, { body })
+        .then((res) => {
+          res.key = randomKey;
+          res.url = genUrl(options.host, res.id, randomKey);
           return res;
-          // return genUrl(host, res.id, res.key);
         });
     });
 }
 
-// uploadChapter('blah', { password: 'test' }).then(console.log).catch(console.error);
+/**
+ * Will upload a chapter to a privatebin instance. Will use https://privatebin.net by default.
+ * @param {String} novel The name of the novel this chapter is for.
+ * @param {String} title The title of this chapter.
+ * @param {String} chapter The actual chapter to create a paste for.
+ */
+function uploadChapter(novel, title, chapter) {
+  const data = `${novel} - ${title}:\n\n${chapter}`;
+  return createPaste(data);
+}
+
+// uploadChapter('Immortal Mortal', '345 - Spirit Bones', 'In a land far away...').then(console.log).catch(console.error);
 
 module.exports = {
+  createPaste,
   uploadChapter,
 };

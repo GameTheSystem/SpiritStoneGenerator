@@ -9,7 +9,13 @@ module.exports = {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
   },
+  // Default PrivateBin options
   privatebin: {
+    host: 'https://privatebin.net',
     password: '',
+    expire: 'never',
+    formatter: 'plaintext',
+    burnafterreading: 1,
+    opendiscussion: 0,
   },
 };
