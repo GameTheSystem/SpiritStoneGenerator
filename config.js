@@ -15,7 +15,7 @@ module.exports = {
     password: '',
     expire: 'never',
     formatter: 'plaintext',
-    burnafterreading: 1,
+    burnafterreading: 0,
     opendiscussion: 0,
   },
 };

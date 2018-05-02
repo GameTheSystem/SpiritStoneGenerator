@@ -76,23 +76,24 @@ function genKey(passphrase, salt, iterations, keySize, digest) {
  * @param {String} masterKey A randomly generated base64 key. Used by PasteBin clients to decrypt pastes.
  * @param {String} pass An optional password. Used by PasteBin clients in conjunction with the masterKey for decryption.
  */
-function encrypt(msg, masterKey, pass) {
+async function encrypt(msg, masterKey, pass) {
+  // Pre-Encryption Values
   const iv = crypto.randomBytes(16);
   const salt = crypto.randomBytes(8);
   const passphrase = `${masterKey}${pass ? crypto.createHash('sha256').update(pass).digest('hex') : ''}`;
 
-  return Promise.all([prepMsg(msg), genKey(passphrase, salt, encOpts.iter, encOpts.ks / 8, 'sha256')])
-    .then(([preppedMsg, key]) => {
-      const cipher = crypto.createCipheriv(`${encOpts.cipher}-${encOpts.ks}-${encOpts.mode}`, key, iv);
-      const encrypted = Buffer.concat([cipher.update(preppedMsg), cipher.final()]);
+  // Actual Encryption
+  const [preppedMsg, key] = await Promise.all([prepMsg(msg),
+    genKey(passphrase, salt, encOpts.iter, encOpts.ks / 8, 'sha256')]);
+  const cipher = crypto.createCipheriv(`${encOpts.cipher}-${encOpts.ks}-${encOpts.mode}`, key, iv);
+  const encrypted = Buffer.concat([cipher.update(preppedMsg), cipher.final()]);
 
-      return Object.assign({
-        iv: iv.toString('base64'),
-        ts: cipher.getAuthTag().length * 8,
-        salt: salt.toString('base64'),
-        ct: Buffer.concat([encrypted, cipher.getAuthTag()]).toString('base64'),
-      }, encOpts);
-    });
+  return Object.assign({
+    iv: iv.toString('base64'),
+    ts: cipher.getAuthTag().length * 8,     // authentication tag size in bits
+    salt: salt.toString('base64'),
+    ct: Buffer.concat([encrypted, cipher.getAuthTag()]).toString('base64'),
+  }, encOpts);
 }
 
 /**
@@ -134,8 +135,6 @@ function uploadChapter(novel, title, chapter) {
   const data = `${novel} - ${title}:\n\n${chapter}`;
   return createPaste(data);
 }
-
-// uploadChapter('Immortal Mortal', '345 - Spirit Bones', 'In a land far away...').then(console.log).catch(console.error);
 
 module.exports = {
   createPaste,
