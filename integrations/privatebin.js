@@ -83,8 +83,10 @@ async function encrypt(msg, masterKey, pass) {
   const passphrase = `${masterKey}${pass ? crypto.createHash('sha256').update(pass).digest('hex') : ''}`;
 
   // Actual Encryption
-  const [preppedMsg, key] = await Promise.all([prepMsg(msg),
-    genKey(passphrase, salt, encOpts.iter, encOpts.ks / 8, 'sha256')]);
+  const [preppedMsg, key] = await Promise.all([
+    prepMsg(msg),
+    genKey(passphrase, salt, encOpts.iter, encOpts.ks / 8, 'sha256'),
+  ]);
   const cipher = crypto.createCipheriv(`${encOpts.cipher}-${encOpts.ks}-${encOpts.mode}`, key, iv);
   const encrypted = Buffer.concat([cipher.update(preppedMsg), cipher.final()]);
 
