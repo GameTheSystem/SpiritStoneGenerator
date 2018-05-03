@@ -102,27 +102,24 @@ async function encrypt(msg, masterKey, pass) {
  * @param {Object} options Any options relevant to creating a PrivateBin Paste. Check the API docs at the top of the
  * file to see more info.
  */
-function createPaste(data, options = {}) {
+async function createPaste(data, options = {}) {
   const randomKey = crypto.randomBytes(32).toString('base64');
   options = Object.assign({}, config.privatebin, options);      // eslint-disable-line no-param-reassign
 
-  return encrypt(data, randomKey, options.password)
-    .then((payload) => {
-      const body = querystring.stringify({
-        data: JSON.stringify(payload),
-        expire: options.expire,
-        formatter: options.formatter,
-        burnafterreading: options.burnafterreading,
-        opendiscussion: options.opendiscussion,
-      });
+  const payload = await encrypt(data, randomKey, options.password);
+  const res = await request.post(options.host, {
+    body: querystring.stringify({
+      data: JSON.stringify(payload),
+      expire: options.expire,
+      formatter: options.formatter,
+      burnafterreading: options.burnafterreading,
+      opendiscussion: options.opendiscussion,
+    }),
+  });
 
-      return request.post(options.host, { body })
-        .then((res) => {
-          res.key = randomKey;
-          res.url = genUrl(options.host, res.id, randomKey);
-          return res;
-        });
-    });
+  res.key = randomKey;
+  res.url = genUrl(options.host, res.id, randomKey);
+  return res;
 }
 
 /**
