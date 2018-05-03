@@ -11,9 +11,9 @@ module.exports = {
   },
   // Default PrivateBin options
   privatebin: {
-    host: 'https://privatebin.net',
-    password: '',
-    expire: 'never',
+    host: process.env.PRIVATEBIN_HOST || 'https://privatebin.net',
+    password: process.env.PRIVATEBIN_PASS || '',
+    expire: process.env.PRIVATEBIN_EXPIRE || 'never',
     formatter: 'plaintext',
     burnafterreading: 0,
     opendiscussion: 0,
