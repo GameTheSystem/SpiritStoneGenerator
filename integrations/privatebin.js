@@ -18,15 +18,14 @@ const request = require('request-promise-native').defaults({
 });
 
 // These are the encryption defaults privatebin instances expect to see in SJCL format
-const encOpts = {
+const encOpts = Object.freeze({
   v: 1,           // version number of the SJCL format being used
   cipher: 'aes',
   mode: 'gcm',
   adata: '',      // optional cleartext auth data, not currently used
   iter: 10000,    // Key Iterations
   ks: 256,        // key size in bits
-};
-Object.freeze(encOpts);
+});
 
 /**
  * Generates the PrivateBin url given a specific PrivateBin host, pasteId, and key.
