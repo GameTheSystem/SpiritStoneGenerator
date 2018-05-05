@@ -23,7 +23,7 @@ const encOpts = Object.freeze({
   cipher: 'aes',
   mode: 'gcm',
   adata: '',      // optional cleartext auth data, not currently used
-  iter: 10000,    // Key Iterations
+  iter: 10000,    // key iterations
   ks: 256,        // key size in bits
 });
 
